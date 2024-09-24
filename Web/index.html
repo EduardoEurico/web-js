@@ -113,7 +113,7 @@
 
 <style>
     body {
-        background-image: url("cafejpg.jpg");
+        background-image: url("trabalho.jpg");
         background-size: cover;
         font-family: Arial, sans-serif;
         align-items: center;
@@ -123,22 +123,25 @@
     }
 
     .card-hora {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        transition: 0.3s;
-        width: 20%;
-        padding: 10px;
-        margin: auto;
-        background-color: #f8f8f8;
-        height: 200px;
-        border-radius: 150px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-family: monospace;
-        font-size: 24px;
-        color: #333;
-    }
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); /* Sombra mais intensa */
+    transition: 0.3s;
+    width: 300px; /* Ajustado para ser mais largo */
+    height: 100px; /* Altura mais baixa para se parecer com um display de relógio */
+    margin: auto;
+    background-color: #ffffff; /* Fundo preto imitando tela de relógio digital */
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif; /* Fonte digital */
+    font-size: 48px; /* Tamanho grande para se parecer com um relógio */
+    color: #0377fc; /* Cor verde neon, parecida com displays digitais */
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(174, 223, 247, 0.8), 0 0 40px rgba(174, 223, 247, 0.5); /* Efeito de brilho azul suave */
+    letter-spacing: 3px; /* Espaçamento entre letras/dígitos */
+}
+
 
     .card-hora::before {
         content: "";
@@ -150,21 +153,61 @@
     }
 
     .card-info {
-        background-color: #f9f9f9;
-        padding: 10px;
-        margin-bottom: 10px;
-        max-width: 400px;
-        /* Centralizar o card-info no meio da página */
-        margin: 20px auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+    background-color: #F4F4F4; /* Fundo preto imitando tela de relógio digital */
+    box-shadow: 0 0 20px rgba(174, 223, 247, 0.8), 0 0 40px rgba(174, 223, 247, 0.5); /* Efeito de brilho azul suave */
+    padding: 20px;
+    margin-bottom: 10px;
+    max-width: 400px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px; /* Bordas arredondadas */
+}
 
-    input, select {
-        /* Para garantir que todos os elementos ocupem a mesma largura */
-        max-width: 100%;
-    }
+input, select {
+    background-color: #ffffff; /* Fundo preto */
+    color: #0377fc; /* Cor do texto verde neon */
+    border: 2px solid #E8E8E8; /* Borda verde neon */
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    font-size: 18px;
+    font-family: 'Orbitron', sans-serif; /* Fonte estilo digital */
+    text-align: center; /* Texto centralizado no input */
+    box-shadow: 0 0 20px rgba(174, 223, 247, 0.8), 0 0 40px rgba(174, 223, 247, 0.5); /* Efeito de brilho azul suave */
+    border-radius: 5px; /* Bordas arredondadas */
+}
+
+input::placeholder {
+    color: #0377fc; /* Cor do placeholder combinando com o texto */
+    opacity: 0.7; /* Deixar o placeholder um pouco mais claro */
+}
+
+input:focus, select:focus {
+    box-shadow: 0 0 20px rgba(174, 223, 247, 0.8), 0 0 40px rgba(174, 223, 247, 0.5); /* Efeito de brilho azul suave */
+}
+
+.botao-enviar {
+    background-color: #ffffff; /* Fundo preto */
+    color: #0377fc; /* Texto verde neon */
+    border: 2px solid #E8E8E8; /* Borda verde neon */
+    padding: 10px 20px;
+    font-size: 18px;
+    font-family: 'Orbitron', sans-serif; /* Fonte estilo digital */
+    text-align: center;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(174, 223, 247, 0.8), 0 0 40px rgba(174, 223, 247, 0.5); /* Efeito de brilho azul suave */
+    border-radius: 5px; /* Bordas arredondadas */
+    transition: all 0.3s ease; /* Animação suave para mudanças */
+}
+
+.botao-enviar:hover {
+    background-color: #002a5a; 
+    box-shadow: 0 0 20px rgba(174, 223, 247, 0.8), 0 0 40px rgba(174, 223, 247, 0.5); /* Efeito de brilho azul suave */
+}
+
 
 
     .alert {
@@ -177,17 +220,5 @@
         color: black;
     }
 
-    .botao-enviar {
-        background-color: #4CAF50;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 12px;
-        top: 20px;
-    }
+    
 </style>
