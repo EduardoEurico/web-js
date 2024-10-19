@@ -4,44 +4,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sistema de Controle de Ponto</title>
 </head>
 
 <body>
 
     <div class="card-hora">
-        <span id="clock"></span>
+        <span id="date"></span> - <span id="clock"></span>
         <script>
             setInterval(function() {
                 var clock = document.getElementById("clock");
+                var dateElement = document.getElementById("date");
                 var currentTime = new Date();
-                var hours = currentTime.getHours().toString().padStart(2, '0'); 
+                var hours = currentTime.getHours().toString().padStart(2, '0');
                 var minutes = currentTime.getMinutes().toString().padStart(2, '0');
                 var seconds = currentTime.getSeconds().toString().padStart(2, '0');
+                var date = currentTime.toLocaleDateString();
 
                 clock.innerHTML = hours + ":" + minutes + ":" + seconds;
+                dateElement.innerHTML = date;
             }, 1000);
         </script>
     </div>
 
     <div class="card-info">
-        <form id="formulario" onsubmit="return validateForm()" style="display: flex; flex-direction: column; align-items: center;">
+        <form id="formulario" onsubmit="return validateForm()" enctype="multipart/form-data" style="display: flex; flex-direction: column; align-items: center;">
             <input type="text" id="nome" placeholder="Nome" style="display: block; margin-bottom: 10px; width: 100%;">
             <input type="text" id="cpf" placeholder="CPF:" style="display: block; margin-bottom: 10px; width: 100%;">
             
+            <!-- Campo para selecionar data do ponto -->
+            <label for="data">Data do Ponto:</label>
+            <input type="date" id="data" style="display: block; margin-bottom: 10px; width: 100%;" max="">
+            
             <select id="tipo" style="display: block; margin-bottom: 10px; width: 100%;">
                 <option value="entrada" selected>Entrada</option>
-                <option value="almoco">Almoço</option>
-                <option value="retorno">Retorno</option>
                 <option value="saida">Saída</option>
+                <option value="entrada_intervalo">Entrada de Intervalo</option>
+                <option value="saida_intervalo">Saída de Intervalo</option>
             </select>
+
+            <!-- Campo para justificativa -->
+            <textarea id="justificativa" placeholder="Justificativa (opcional)" style="display: block; margin-bottom: 10px; width: 100%;"></textarea>
+
+            <!-- Campo para upload de arquivo -->
+            <label for="upload">Upload de Arquivo (opcional):</label>
+            <input type="file" id="upload" name="upload" style="margin-bottom: 10px; width: 100%;">
+            
+            <!-- Observação adicional -->
+            <textarea id="observacao" placeholder="Observação (opcional)" style="display: block; margin-bottom: 10px; width: 100%;"></textarea>
     
-            <input type="submit" class="botao-enviar" value="submit" style="display: block; width: 100%;">
+            <input type="submit" class="botao-enviar" value="Registrar Ponto" style="display: block; width: 100%;">
         </form>
         <div class="alert"></div>
     </div>
-    
-    
 
     <dialog id="meuDialogo">
         Bem vindo ao sistema de ponto eletrônico!
@@ -50,7 +65,6 @@
     </dialog>
 
     <script>
-        // Função para exibir o diálogo inicial
         var dialogo = document.getElementById('meuDialogo');
         var botaoFechar = document.getElementById('botaoFechar');
         dialogo.showModal();
@@ -59,12 +73,13 @@
             dialogo.close();
         };
 
-        // Validação do formulário
+        document.getElementById('data').max = new Date().toISOString().split("T")[0]; // Impede datas futuras
+
         function validateForm() {
             var nomeInput = document.getElementById("nome");
             var cpfInput = document.getElementById("cpf");
             var alertDiv = document.getElementsByClassName("alert")[0];
-
+            var dataInput = document.getElementById("data").value;
             var nome = nomeInput.value.trim();
             var cpf = cpfInput.value.replace(/[^0-9]/g, '');
 
@@ -78,35 +93,29 @@
                 return false;
             }
 
+            if (!dataInput) {
+                alertDiv.innerHTML = "Por favor, selecione uma data.";
+                return false;
+            }
+
             alertDiv.innerHTML = "";
-            handleFormSubmit(nome, cpf);
-            return false; // Para evitar o recarregamento da página
+            handleFormSubmit(nome, cpf, dataInput);
+            return false;
         }
 
-        // Manipulação de envio do formulário (em vez de PHP)
-        function handleFormSubmit(nome, cpf) {
+        function handleFormSubmit(nome, cpf, data) {
             var tipo = document.getElementById("tipo").value;
             var horario = new Date().toLocaleTimeString();
-
-            // Exibe mensagem de sucesso
-            var alertDiv = document.getElementsByClassName("alert")[0];
-            alertDiv.innerHTML = `Olá ${nome}, segue abaixo seus dados após a batida do ponto.<br><br>Nome: ${nome}<br>CPF: ${cpf}<br>Horário: ${horario}<br>Tipo: ${tipo}`;
-
-            // Simula a gravação em um CSV (apenas exemplo no console)
-            console.log(`Nome: ${nome}, CPF: ${cpf}, Horário: ${horario}, Tipo: ${tipo}`);
+            var justificativa = document.getElementById("justificativa").value.trim();
+            var observacao = document.getElementById("observacao").value.trim();
             
-            // Remove a mensagem após 2 segundos
-            setTimeout(function() {
-                alertDiv.style.transition = "opacity 0.5s ease";
-                alertDiv.style.opacity = "0";
-                setTimeout(function() {
-                    alertDiv.innerHTML = "";
-                    alertDiv.style.opacity = "1";
-                }, 500);
-            }, 2000);
+            var alertDiv = document.getElementsByClassName("alert")[0];
+            alertDiv.innerHTML = `Registro de ponto:<br>Nome: ${nome}<br>CPF: ${cpf}<br>Data: ${data}<br>Horário: ${horario}<br>Tipo: ${tipo}<br>Justificativa: ${justificativa}<br>Observação: ${observacao}`;
+            
+            console.log(`Nome: ${nome}, CPF: ${cpf}, Data: ${data}, Horário: ${horario}, Tipo: ${tipo}, Justificativa: ${justificativa}, Observação: ${observacao}`);
         }
     </script>
-    
+
 </body>
 
 </html>
