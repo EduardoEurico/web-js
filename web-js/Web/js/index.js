@@ -157,3 +157,68 @@ document.addEventListener('DOMContentLoaded', function() {
     today.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for consistency
     document.getElementById('calendario').setAttribute('max', today.toISOString().split('T')[0]);
 });
+
+const valorHora = 40; // Valor por hora ajustável
+
+// Função para calcular salário parcial
+function calcularSalarioParcial(dataLimite) {
+    let userData = JSON.parse(localStorage.getItem('userData')) || [];
+    let salarioParcial = 0;
+    userData.forEach(entry => {
+        let dataRegistro = new Date(entry.calendario);
+        if (dataRegistro <= new Date(dataLimite)) {
+            // Suponha 1 hora por registro para simplificar, ou personalize conforme necessário
+            salarioParcial += valorHora;
+        }
+    });
+    return salarioParcial;
+}
+
+const cargaHorariaMaxima = 8; // Limite de carga horária em horas
+
+function verificarCargaHorariaDiaria() {
+    let userData = JSON.parse(localStorage.getItem('userData')) || [];
+    let horasTrabalhadas = 0;
+
+    const hoje = new Date().toISOString().split('T')[0]; // Data de hoje no formato AAAA-MM-DD
+    userData.forEach(entry => {
+        if (entry.calendario === hoje) {
+            horasTrabalhadas += 1; // Supondo 1 hora por registro como exemplo
+        }
+    });
+
+    if (horasTrabalhadas > cargaHorariaMaxima) {
+        alert(`Atenção: Você ultrapassou a carga horária máxima de ${cargaHorariaMaxima} horas!`);
+    }
+}
+
+// Chame essa função após cada novo registro ou no carregamento da página
+document.addEventListener('DOMContentLoaded', verificarCargaHorariaDiaria);
+
+// Função para calcular saldo de horas trabalhadas
+function calcularSaldoHoras() {
+    let userData = JSON.parse(localStorage.getItem('userData')) || [];
+    return userData.length; // Considerando 1 hora por registro para simplificar
+}
+
+// Atualizar interface com saldo de horas e salário
+function atualizarInformacoes() {
+    document.getElementById('saldoHoras').innerText = `Saldo de horas: ${calcularSaldoHoras()} horas`;
+    document.getElementById('salarioParcial').innerText = `Salário parcial: R$${calcularSalarioParcial(new Date().toISOString().split('T')[0]).toFixed(2)}`;
+}
+
+// Função para adicionar observação ao registro
+function adicionarObservacao(registroId, observacao) {
+    let userData = JSON.parse(localStorage.getItem('userData')) || [];
+    let registro = userData.find((entry, index) => index === registroId);
+    if (registro) {
+        registro.observacao = observacao;
+        registro.isEdited = true; // Marca o registro como editado
+        localStorage.setItem('userData', JSON.stringify(userData));
+    }
+}
+
+// Atualizar função de submissão do formulário para incluir o saldo de horas e salário
+document.addEventListener('DOMContentLoaded', function() {
+    atualizarInformacoes(); // Exibir saldo inicial de horas e salário parcial
+});

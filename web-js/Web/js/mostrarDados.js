@@ -4,13 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function displayDataFromLocalStorage() {
     const tableBody = document.getElementById('data-table-body');
-    tableBody.innerHTML = ''; // Limpa o conteúdo existente
+    tableBody.innerHTML = '';
 
-    // Obtém os dados do localStorage
     let userData = JSON.parse(localStorage.getItem('userData')) || [];
 
-    // Loop pelos dados e cria linhas na tabela
-    userData.forEach(entry => {
+    userData.forEach((entry, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${entry.nome}</td>
@@ -21,13 +19,33 @@ function displayDataFromLocalStorage() {
             <td>${entry.estado}</td>
             <td>${entry.pais}</td>
             <td>${entry.justificativa}</td>
+            <td>${entry.observacao || 'Nenhuma'}</td>
             <td>${entry.arquivo ? `<button onclick="downloadFile('${entry.arquivo}')">Baixar Arquivo</button>` : 'Não'}</td>
+            <td><button onclick="editRegistro(${index})">Editar</button></td>
+            <td><button onclick="exibirAlertaExclusao()">Excluir</button></td>
         `;
-        if (entry.isPastDate) {
-            tr.style.backgroundColor = '#f2f2f2'; 
+        if (entry.isEdited) {
+            tr.style.backgroundColor = '#ffe4b5';
+        } else if (entry.observacao) {
+            tr.style.backgroundColor = '#cce5ff';
         }
         tableBody.appendChild(tr);
     });
+}
+
+// Função para exibir o alerta de exclusão
+function exibirAlertaExclusao() {
+    alert("Este ponto não pode ser excluído.");
+}
+
+function editRegistro(index) {
+    let userData = JSON.parse(localStorage.getItem('userData'));
+    let registro = userData[index];
+    let novaObservacao = prompt("Edite a observação:", registro.observacao || '');
+    if (novaObservacao !== null) {
+        adicionarObservacao(index, novaObservacao);
+        displayDataFromLocalStorage(); // Atualiza a interface
+    }
 }
 
 // Função para baixar o arquivo
@@ -45,4 +63,53 @@ function downloadFile(base64File) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url); // Libera o objeto URL
+}
+
+function filtrarUltimaSemana() {
+    const hoje = new Date();
+    const umaSemanaAtras = new Date(hoje);
+    umaSemanaAtras.setDate(hoje.getDate() - 7);
+
+    exibirRegistrosFiltrados(entry => {
+        const dataRegistro = new Date(entry.calendario);
+        return dataRegistro >= umaSemanaAtras && dataRegistro <= hoje;
+    });
+}
+
+// Função para filtrar registros do último mês
+function filtrarUltimoMes() {
+    const hoje = new Date();
+    const umMesAtras = new Date(hoje);
+    umMesAtras.setMonth(hoje.getMonth() - 1);
+
+    exibirRegistrosFiltrados(entry => {
+        const dataRegistro = new Date(entry.calendario);
+        return dataRegistro >= umMesAtras && dataRegistro <= hoje;
+    });
+}
+
+// Função para exibir registros com base no filtro aplicado
+function exibirRegistrosFiltrados(filtroFunc) {
+    const tableBody = document.getElementById('data-table-body');
+    tableBody.innerHTML = '';
+
+    let userData = JSON.parse(localStorage.getItem('userData')) || [];
+    userData = userData.filter(filtroFunc);
+
+    userData.forEach(entry => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${entry.nome}</td>
+            <td>${entry.cpf}</td>
+            <td>${entry.calendario}</td>
+            <td>${entry.horario}</td>
+            <td>${entry.tipo}</td>
+            <td>${entry.estado}</td>
+            <td>${entry.pais}</td>
+            <td>${entry.justificativa}</td>
+            <td>${entry.observacao || 'Nenhuma'}</td>
+            <td>${entry.arquivo ? `<button onclick="downloadFile('${entry.arquivo}')">Baixar Arquivo</button>` : 'Não'}</td>
+        `;
+        tableBody.appendChild(tr);
+    });
 }
