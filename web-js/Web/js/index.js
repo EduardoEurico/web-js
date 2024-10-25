@@ -34,9 +34,11 @@ function validateForm() {
         return false;
     }
 
+    // Formatação para considerar apenas a data (sem horas)
     var calendario = new Date(dataInput.value);
     var today = new Date();
-    today.setHours(0, 0, 0, 0); // Remove parte do tempo para comparação
+    today.setHours(today.getHours() - 3, 0, 0, 0); // Subtrai 3 horas e define para 00:00:00 para considerar o fuso horário local
+    calendario.setHours(0, 0, 0, 0); // Define para 00:00:00 para comparar somente a data
 
     if (isNaN(calendario.getTime())) {
         alertDiv.innerHTML = "Data inválida.";
@@ -48,9 +50,9 @@ function validateForm() {
         return false;
     }
 
-    // Validações para justificativa e upload de arquivo
-    if (!justificativa && !arquivo) {
-        alertDiv.innerHTML = "Por favor, insira uma justificativa ou faça o upload de um arquivo.";
+    // Validação de justificativa ou upload de arquivo apenas para registros em dias anteriores
+    if (calendario < today && !justificativa && !arquivo) {
+        alertDiv.innerHTML = "Para registros em dias anteriores, insira uma justificativa ou faça o upload de um arquivo.";
         return false;
     }
 

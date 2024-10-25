@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     displayDataFromLocalStorage();
 });
 
+// Função para exibir dados do localStorage
 function displayDataFromLocalStorage() {
     const tableBody = document.getElementById('data-table-body');
     tableBody.innerHTML = '';
@@ -19,24 +20,47 @@ function displayDataFromLocalStorage() {
             <td>${entry.estado}</td>
             <td>${entry.pais}</td>
             <td>${entry.justificativa}</td>
-            <td>${entry.observacao || 'Nenhuma'}</td>
             <td>${entry.arquivo ? `<button onclick="downloadFile('${entry.arquivo}')">Baixar Arquivo</button>` : 'Não'}</td>
+            <td>${entry.observacao || 'Nenhuma'}</td>
             <td><button onclick="editRegistro(${index})">Editar</button></td>
             <td><button onclick="exibirAlertaExclusao()">Excluir</button></td>
         `;
         if (entry.isEdited) {
-            tr.style.backgroundColor = '#ffe4b5';
+            tr.style.backgroundColor = '#ffe4b5'; // Cor para registros editados
         } else if (entry.observacao) {
-            tr.style.backgroundColor = '#cce5ff';
+            tr.style.backgroundColor = '#cce5ff'; // Cor diferenciada para registros com observação
         }
         tableBody.appendChild(tr);
     });
+}
+
+// Função para adicionar observação ao registro e marcá-lo como editado
+function adicionarObservacao(registroId, observacao) {
+    let userData = JSON.parse(localStorage.getItem('userData')) || [];
+    let registro = userData[registroId];
+    if (registro) {
+        registro.observacao = observacao;
+        registro.isEdited = true; // Marca o registro como editado
+        localStorage.setItem('userData', JSON.stringify(userData)); // Atualiza o localStorage
+    }
+}
+
+// Função para editar um registro
+function editRegistro(index) {
+    let userData = JSON.parse(localStorage.getItem('userData')) || [];
+    let registro = userData[index];
+    let novaObservacao = prompt("Edite a observação:", registro.observacao || '');
+    if (novaObservacao !== null) {
+        adicionarObservacao(index, novaObservacao); // Chama a função adicionarObservacao
+        displayDataFromLocalStorage(); // Atualiza a interface
+    }
 }
 
 // Função para exibir o alerta de exclusão
 function exibirAlertaExclusao() {
     alert("Este ponto não pode ser excluído.");
 }
+
 
 function editRegistro(index) {
     let userData = JSON.parse(localStorage.getItem('userData'));
