@@ -28,10 +28,12 @@ function validateForm() {
     if (isNaN(calendario.getTime())) {
         alertDiv.innerHTML = "Data inválida.";
         return false;
-    } if (calendario > today) {
+    } 
+    if (calendario > today) {
         alertDiv.innerHTML = "Não é permitido registrar ponto em data futura.";
         return false;
-    } if (calendario < today && !arquivo && !justificativa) {
+    } 
+    if (calendario < today && !arquivo && !justificativa) {
         console.log("Data anterior sem justificativa ou arquivo detectada");
         alertDiv.innerHTML = "Para registros em dias anteriores, insira uma justificativa ou faça o upload de um arquivo.";
         return false;
@@ -45,7 +47,7 @@ function validateForm() {
             handleFormSubmit(nome, cpf, calendario, justificativa, base64File);
         };
         reader.readAsDataURL(arquivo);
-    }else if (!arquivo && justificativa || !justificativa) {
+    }else if (!arquivo && justificativa) {
         alertDiv.innerHTML = "Por favor, faça o upload de um arquivo de justificativa.";
 
     } else {
