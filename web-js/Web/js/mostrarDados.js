@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     displayDataFromLocalStorage();
 });
 
-// Função para exibir dados do localStorage
+// Função para exibir os dados do localStorage
 function displayDataFromLocalStorage() {
     const tableBody = document.getElementById('data-table-body');
     tableBody.innerHTML = '';
@@ -26,69 +26,57 @@ function displayDataFromLocalStorage() {
             <td><button onclick="exibirAlertaExclusao()">Excluir</button></td>
         `;
         if (entry.isEdited) {
-            tr.style.backgroundColor = '#ffe4b5'; // Cor para registros editados
+            tr.style.backgroundColor = '#ffe4b5'; 
         } else if (entry.observacao) {
-            tr.style.backgroundColor = '#cce5ff'; // Cor diferenciada para registros com observação
+            tr.style.backgroundColor = '#cce5ff';
         }
         tableBody.appendChild(tr);
     });
 }
 
-// Função para adicionar observação ao registro e marcá-lo como editado
+// Função para adicionar observação
 function adicionarObservacao(registroId, observacao) {
     let userData = JSON.parse(localStorage.getItem('userData')) || [];
     let registro = userData[registroId];
     if (registro) {
         registro.observacao = observacao;
-        registro.isEdited = true; // Marca o registro como editado
-        localStorage.setItem('userData', JSON.stringify(userData)); // Atualiza o localStorage
+        registro.isEdited = true; 
+        localStorage.setItem('userData', JSON.stringify(userData));
     }
 }
 
-// Função para editar um registro
+// Função para editar registro
 function editRegistro(index) {
     let userData = JSON.parse(localStorage.getItem('userData')) || [];
     let registro = userData[index];
     let novaObservacao = prompt("Edite a observação:", registro.observacao || '');
     if (novaObservacao !== null) {
-        adicionarObservacao(index, novaObservacao); // Chama a função adicionarObservacao
-        displayDataFromLocalStorage(); // Atualiza a interface
+        adicionarObservacao(index, novaObservacao); 
+        displayDataFromLocalStorage();
     }
 }
 
-// Função para exibir o alerta de exclusão
+// Função para exibir alerta de exclusão
 function exibirAlertaExclusao() {
     alert("Este ponto não pode ser excluído.");
 }
 
-
-function editRegistro(index) {
-    let userData = JSON.parse(localStorage.getItem('userData'));
-    let registro = userData[index];
-    let novaObservacao = prompt("Edite a observação:", registro.observacao || '');
-    if (novaObservacao !== null) {
-        adicionarObservacao(index, novaObservacao);
-        displayDataFromLocalStorage(); // Atualiza a interface
-    }
-}
-
-// Função para baixar o arquivo
+// Função para baixar arquivo
 function downloadFile(base64File) {
-    // Extrai o tipo e a base64 do arquivo
     const [fileType, base64Data] = base64File.split(';base64,');
     const blob = new Blob([new Uint8Array(atob(base64Data).split("").map(char => char.charCodeAt(0)))], { type: fileType });
     const url = URL.createObjectURL(blob);
 
-    // Cria um link temporário para o download
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'justificativa.pdf'; // Nome do arquivo
+    a.download = 'justificativa.pdf';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url); // Libera o objeto URL
+    URL.revokeObjectURL(url);
 }
 
+// Função para filtrar registros
 function filtrarUltimaSemana() {
     const hoje = new Date();
     const umaSemanaAtras = new Date(hoje);
@@ -100,7 +88,7 @@ function filtrarUltimaSemana() {
     });
 }
 
-// Função para filtrar registros do último mês
+// Função para filtrar registros
 function filtrarUltimoMes() {
     const hoje = new Date();
     const umMesAtras = new Date(hoje);
@@ -112,7 +100,7 @@ function filtrarUltimoMes() {
     });
 }
 
-// Função para exibir registros com base no filtro aplicado
+// Função para exibir registros
 function exibirRegistrosFiltrados(filtroFunc) {
     const tableBody = document.getElementById('data-table-body');
     tableBody.innerHTML = '';
@@ -120,7 +108,7 @@ function exibirRegistrosFiltrados(filtroFunc) {
     let userData = JSON.parse(localStorage.getItem('userData')) || [];
     userData = userData.filter(filtroFunc);
 
-    userData.forEach(entry => {
+    userData.forEach((entry, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${entry.nome}</td>
@@ -131,9 +119,16 @@ function exibirRegistrosFiltrados(filtroFunc) {
             <td>${entry.estado}</td>
             <td>${entry.pais}</td>
             <td>${entry.justificativa}</td>
-            <td>${entry.observacao || 'Nenhuma'}</td>
             <td>${entry.arquivo ? `<button onclick="downloadFile('${entry.arquivo}')">Baixar Arquivo</button>` : 'Não'}</td>
+            <td>${entry.observacao || 'Nenhuma'}</td>
+            <td><button onclick="editRegistro(${index})">Editar</button></td>
+            <td><button onclick="exibirAlertaExclusao()">Excluir</button></td>
         `;
+        if (entry.isEdited) {
+            tr.style.backgroundColor = '#ffe4b5';
+        } else if (entry.observacao) {
+            tr.style.backgroundColor = '#cce5ff'; 
+        }
         tableBody.appendChild(tr);
     });
 }

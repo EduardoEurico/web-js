@@ -2,6 +2,7 @@ const hours = document.querySelector('#hours');
 const minutes = document.querySelector('#minutes');
 const seconds = document.querySelector('#seconds');
 
+// Função para atualizar o relógio
 setInterval(function time() {
   let dateToday = new Date();
   let hr = dateToday.getHours();

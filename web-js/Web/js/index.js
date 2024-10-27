@@ -1,19 +1,6 @@
-setInterval(function() {
-    var clock = document.getElementById("clock");
-    var currentTime = new Date();
-    var hours = currentTime.getHours().toString().padStart(2, '0'); 
-    var minutes = currentTime.getMinutes().toString().padStart(2, '0');
-    var seconds = currentTime.getSeconds().toString().padStart(2, '0');
-
-    clock.innerHTML = hours + ":" + minutes + ":" + seconds;
-}, 1000);
-
-// Função para exibir o diálogo inicial
 var dialogo = document.getElementById('meuDialogo');
 var botaoFechar = document.getElementById('botaoFechar');
 
-// Validação do formulário
-// Função para validar o formulário
 // Função para validar o formulário
 function validateForm() {
     var nomeInput = document.getElementById("nome");
@@ -28,50 +15,47 @@ function validateForm() {
     var justificativa = justificativaInput.value.trim();
     var arquivo = arquivoInput.files[0];
 
-    // Verifica se o campo de data tem valor
     if (!dataInput.value) {
         alertDiv.innerHTML = "Por favor, insira uma data.";
         return false;
     }
 
-    // Formatação para considerar apenas a data (sem horas)
-    var calendario = new Date(dataInput.value);
+    var calendario = new Date(dataInput.value + "T00:00:00");
+    calendario.setHours(0, 0, 0, 0); 
     var today = new Date();
-    today.setHours(today.getHours() - 3, 0, 0, 0); // Subtrai 3 horas e define para 00:00:00 para considerar o fuso horário local
-    calendario.setHours(0, 0, 0, 0); // Define para 00:00:00 para comparar somente a data
+    today.setHours(0, 0, 0, 0); 
 
     if (isNaN(calendario.getTime())) {
         alertDiv.innerHTML = "Data inválida.";
         return false;
-    }
-
-    if (calendario > today) {
+    } if (calendario > today) {
         alertDiv.innerHTML = "Não é permitido registrar ponto em data futura.";
         return false;
-    }
-
-    // Validação de justificativa ou upload de arquivo apenas para registros em dias anteriores
-    if (calendario < today && !justificativa && !arquivo) {
+    } if (calendario < today && !arquivo && !justificativa) {
+        console.log("Data anterior sem justificativa ou arquivo detectada");
         alertDiv.innerHTML = "Para registros em dias anteriores, insira uma justificativa ou faça o upload de um arquivo.";
         return false;
     }
-
     alertDiv.innerHTML = "";
-
-    // Se houver um arquivo, leia-o como Base64
+    
     if (arquivo) {
         var reader = new FileReader();
         reader.onload = function (e) {
             var base64File = e.target.result;
             handleFormSubmit(nome, cpf, calendario, justificativa, base64File);
         };
-        reader.readAsDataURL(arquivo); // Converte o arquivo para Base64
-    } else {
-        handleFormSubmit(nome, cpf, calendario, justificativa, null);
-    }
+        reader.readAsDataURL(arquivo);
+    }else if (!arquivo && justificativa || !justificativa) {
+        alertDiv.innerHTML = "Por favor, faça o upload de um arquivo de justificativa.";
 
-    return false; // Impede o recarregamento da página
+    } else {
+        handleFormSubmit(nome, cpf, calendario, null, null);
+    }
+    
+    return false;
 }
+
+
 
 // Função para lidar com o envio do formulário
 function handleFormSubmit(nome, cpf, calendario, justificativa, base64File) {
@@ -81,12 +65,10 @@ function handleFormSubmit(nome, cpf, calendario, justificativa, base64File) {
 
     var isPastDate = calendario < new Date(new Date().setHours(0, 0, 0, 0));
 
-    // Geolocalização opcional (caso precise de coordenadas)
     navigator.geolocation.getCurrentPosition(function (position) {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
 
-        // Chama a função para obter o estado e o país
         getLocationInfo(latitude, longitude).then(locationData => {
             var alertDiv = document.getElementsByClassName("alert")[0];
             alertDiv.innerHTML = `Olá ${nome}, seus dados foram registrados.<br><br>
@@ -126,10 +108,8 @@ function getLocationInfo(latitude, longitude) {
 
 // Função para salvar no localStorage
 function saveDataToLocalStorage(nome, cpf, formattedDate, horario, tipo, justificativa, base64File, isPastDate, latitude, longitude, state, country) {
-    // Obter dados existentes do localStorage
     let userData = JSON.parse(localStorage.getItem('userData')) || [];
 
-    // Criar uma nova entrada
     const newEntry = {
         nome,
         cpf,
@@ -137,30 +117,24 @@ function saveDataToLocalStorage(nome, cpf, formattedDate, horario, tipo, justifi
         horario,
         tipo,
         justificativa,
-        arquivo: base64File, // Armazena o arquivo convertido em Base64
+        arquivo: base64File, 
         isPastDate,
         latitude,
         longitude,
         estado: state,
         pais: country
     };
-
-    // Adicionar nova entrada ao array
     userData.push(newEntry);
-
-    // Salvar de volta no localStorage
     localStorage.setItem('userData', JSON.stringify(userData));
 }
 
-
-
+//
 document.addEventListener('DOMContentLoaded', function() {
     var today = new Date();
-    today.setHours(0, 0, 0, 0);  // Set time to 00:00:00 for consistency
+    today.setHours(0, 0, 0, 0); 
     document.getElementById('calendario').setAttribute('max', today.toISOString().split('T')[0]);
 });
-
-const valorHora = 40; // Valor por hora ajustável
+const valorHora = 40;
 
 // Função para calcular salário parcial
 function calcularSalarioParcial(dataLimite) {
@@ -169,23 +143,22 @@ function calcularSalarioParcial(dataLimite) {
     userData.forEach(entry => {
         let dataRegistro = new Date(entry.calendario);
         if (dataRegistro <= new Date(dataLimite)) {
-            // Suponha 1 hora por registro para simplificar, ou personalize conforme necessário
             salarioParcial += valorHora;
         }
     });
     return salarioParcial;
 }
+const cargaHorariaMaxima = 8;
 
-const cargaHorariaMaxima = 8; // Limite de carga horária em horas
-
+// Função para verificar a carga horária diária
 function verificarCargaHorariaDiaria() {
     let userData = JSON.parse(localStorage.getItem('userData')) || [];
     let horasTrabalhadas = 0;
 
-    const hoje = new Date().toISOString().split('T')[0]; // Data de hoje no formato AAAA-MM-DD
+    const hoje = new Date().toISOString().split('T')[0]; 
     userData.forEach(entry => {
         if (entry.calendario === hoje) {
-            horasTrabalhadas += 1; // Supondo 1 hora por registro como exemplo
+            horasTrabalhadas += 1; 
         }
     });
 
@@ -193,17 +166,16 @@ function verificarCargaHorariaDiaria() {
         alert(`Atenção: Você ultrapassou a carga horária máxima de ${cargaHorariaMaxima} horas!`);
     }
 }
-
-// Chame essa função após cada novo registro ou no carregamento da página
+// Verificar a carga horária diária ao carregar a página
 document.addEventListener('DOMContentLoaded', verificarCargaHorariaDiaria);
 
 // Função para calcular saldo de horas trabalhadas
 function calcularSaldoHoras() {
     let userData = JSON.parse(localStorage.getItem('userData')) || [];
-    return userData.length; // Considerando 1 hora por registro para simplificar
+    return userData.length; 
 }
 
-// Atualizar interface com saldo de horas e salário
+// Função para atualizar informações de saldo de horas e salário parcial
 function atualizarInformacoes() {
     document.getElementById('saldoHoras').innerText = `Saldo de horas: ${calcularSaldoHoras()} horas`;
     document.getElementById('salarioParcial').innerText = `Salário parcial: R$${calcularSalarioParcial(new Date().toISOString().split('T')[0]).toFixed(2)}`;
@@ -222,5 +194,4 @@ function adicionarObservacao(registroId, observacao) {
 
 // Atualizar função de submissão do formulário para incluir o saldo de horas e salário
 document.addEventListener('DOMContentLoaded', function() {
-    atualizarInformacoes(); // Exibir saldo inicial de horas e salário parcial
-});
+    atualizarInformacoes(); });
