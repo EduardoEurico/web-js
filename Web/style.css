@@ -110,18 +110,16 @@ body {
 
 /* Estilos do card-info */
 .card-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    margin-bottom: 10px;
-    max-width: 400px;
-    margin: 40px auto;
-    background: rgba(255, 255, 255, 0.35); /* Mesmo fundo que o .watch */
-    box-shadow: 0 4px 15px 0 rgba(31, 38, 135, 0.37); /* Mesma sombra que o .watch */
-    backdrop-filter: blur(3px); /* Mesmo desfoque que o .watch */
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.18); /* Mesma borda que o .watch */
+    background-color: #F4F4F4; /* Define o fundo do card de informações */
+    box-shadow: 0 0 20px rgba(174, 223, 247, 0.8), 0 0 40px rgba(174, 223, 247, 0.5); /* Efeito de brilho azul */
+    padding: 20px; /* Adiciona espaçamento interno */
+    margin-bottom: 10px; /* Adiciona espaçamento externo abaixo */
+    max-width: 400px; /* Define a largura máxima */
+    margin: 20px auto; /* Centraliza o card horizontalmente com espaçamento vertical */
+    display: flex; /* Define layout flexível */
+    flex-direction: column; /* Alinha itens em coluna */
+    align-items: center; /* Centraliza itens horizontalmente */
+    border-radius: 10px; /* Arredonda os cantos */
 }
 
 .saldo-display {
@@ -185,3 +183,84 @@ input::placeholder, textarea::placeholder {
     border: 1px solid #333;
     color: black; /* Cor preta para o texto da alerta */
 }
+    
+
+    .filter-button {
+        background-color: #4CAF50; /* cor verde suave */
+        color: white;
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 500;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+    
+    /* Cor de fundo ao passar o mouse */
+    .filter-button:hover {
+        background-color: #45a049;
+    }
+    
+    /* Espaçamento do botão em relação ao .nav e à tabela */
+    .nav + .filter-button {
+        margin-top: 30px; /* Distância do nav */
+    }
+    
+    #data-container {
+        margin-top: 20px; /* Distância dos botões para a tabela */
+    }
+    
+    table {
+        width: 100%; /* Define a largura da tabela para ocupar 100% do espaço do container */
+        border-collapse: collapse; /* Remove os espaços entre as bordas das células */
+    }
+    
+    table, th, td {
+        border: 1px solid black; /* Define uma borda preta ao redor da tabela, dos cabeçalhos e das células */
+    }
+    
+    th, td {
+        padding: 8px; /* Adiciona espaçamento interno nas células */
+        text-align: left; /* Alinha o conteúdo das células à esquerda */
+    }
+    
+    th {
+        background-color: transparent; /* Define o fundo dos cabeçalhos como transparente */
+    }
+    
+    tbody {
+        background-color: transparent; /* Define o fundo do corpo da tabela como transparente */
+    }
+    
+    .card-hora {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); /* Adiciona uma sombra mais intensa ao redor do card */
+        transition: 0.3s; /* Suaviza as transições do card */
+        width: 300px; /* Define a largura do card */
+        height: 100px; /* Define a altura do card */
+        margin: auto; /* Centraliza o card horizontalmente */
+        background-color: #ffffff; /* Define o fundo do card como branco */
+        border-radius: 10px; /* Arredonda os cantos do card */
+        display: flex; /* Define um layout flexível para o card */
+        flex-direction: column; /* Alinha os itens dentro do card em uma coluna */
+        justify-content: center; /* Centraliza os itens verticalmente no card */
+        align-items: center; /* Centraliza os itens horizontalmente no card */
+        font-family: 'Orbitron', sans-serif; /* Define uma fonte digital para o card */
+        font-size: 48px; /* Define o tamanho do texto */
+        color: #0377fc; /* Define a cor do texto */
+        padding: 20px; /* Adiciona espaçamento interno ao redor do conteúdo do card */
+        box-shadow: 0 0 20px rgba(174, 223, 247, 0.8), 0 0 40px rgba(174, 223, 247, 0.5); /* Efeito de brilho azul */
+        letter-spacing: 3px; /* Define o espaçamento entre as letras */
+    }
+    
+    .card-hora::before {
+        content: ""; /* Insere um conteúdo vazio antes do card */
+        display: block; /* Exibe o conteúdo como um bloco */
+        width: 100%; /* Define a largura completa */
+        height: 2px; /* Define uma altura de 2px */
+        background-color: #333; /* Define a cor de fundo como cinza escuro */
+        margin-bottom: 10px; /* Adiciona um espaço abaixo do elemento */
+    }
+
