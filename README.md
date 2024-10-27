@@ -1,5 +1,6 @@
 # Controle de Ponto
 https://eduardoeurico.github.io/web-js/Web/
+
 Este projeto é um sistema de controle de ponto desenvolvido para registrar a entrada e saída dos funcionários. Utiliza tecnologias front-end para validação de dados, geolocalização, cálculo de saldo de horas e salário parcial. A aplicação também permite o upload de justificativas, edição de registros e filtragem de relatórios.
 
 ## Funcionalidades
