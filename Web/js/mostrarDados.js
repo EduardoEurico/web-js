@@ -24,6 +24,8 @@ function displayDataFromLocalStorage() {
             <td>${entry.observacao || 'Nenhuma'}</td>
             <td><button onclick="editRegistro(${index})">Editar</button></td>
             <td><button onclick="exibirAlertaExclusao()">Excluir</button></td>
+            <td><button onclick="obs(${index})">Observação</button></td>
+
         `;
         if (entry.isEdited) {
             tr.style.backgroundColor = '#ffe4b5'; 
@@ -49,16 +51,41 @@ function adicionarObservacao(registroId, observacao) {
 function editRegistro(index) {
     let userData = JSON.parse(localStorage.getItem('userData')) || [];
     let registro = userData[index];
+
+    let campos = Object.keys(registro);
+    let novosValores = {};
+
+    campos.forEach(campo => {
+        let valorAtual = registro[campo];
+        let novoValor = prompt(`Edite o valor para "${campo}":`, valorAtual);
+        
+        if (novoValor !== null) {
+            novosValores[campo] = novoValor;
+        } else {
+            novosValores[campo] = valorAtual;
+        }
+    });
+
+    userData[index] = novosValores;
+    localStorage.setItem('userData', JSON.stringify(userData));
+    displayDataFromLocalStorage();
+}
+
+
+
+// Função para exibir alerta de exclusão
+function exibirAlertaExclusao() {
+    alert("Este ponto não pode ser excluído.");
+}
+
+function obs(index) {
+    let userData = JSON.parse(localStorage.getItem('userData')) || [];
+    let registro = userData[index];
     let novaObservacao = prompt("Edite a observação:", registro.observacao || '');
     if (novaObservacao !== null) {
         adicionarObservacao(index, novaObservacao); 
         displayDataFromLocalStorage();
     }
-}
-
-// Função para exibir alerta de exclusão
-function exibirAlertaExclusao() {
-    alert("Este ponto não pode ser excluído.");
 }
 
 // Função para baixar arquivo
@@ -123,6 +150,8 @@ function exibirRegistrosFiltrados(filtroFunc) {
             <td>${entry.observacao || 'Nenhuma'}</td>
             <td><button onclick="editRegistro(${index})">Editar</button></td>
             <td><button onclick="exibirAlertaExclusao()">Excluir</button></td>
+            <td><button onclick="obs(${index})">Observação</button></td>
+
         `;
         if (entry.isEdited) {
             tr.style.backgroundColor = '#ffe4b5';

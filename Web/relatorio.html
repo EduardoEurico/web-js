@@ -16,8 +16,8 @@
         <a href="relatorio.html">Relatório</a>
     </div>
 
-    <button onclick="filtrarUltimaSemana()">Filtrar Última Semana</button>
-    <button onclick="filtrarUltimoMes()">Filtrar Último Mês</button>
+    <button class="filter-button" onclick="filtrarUltimaSemana()">Filtrar Última Semana</button>
+    <button class="filter-button" onclick="filtrarUltimoMes()">Filtrar Último Mês</button>
     
     <div id="data-container">
         <table>
@@ -32,6 +32,7 @@
                     <th>País</th>
                     <th>Justificativa</th>
                     <th>Arquivo</th>
+                    <th>Obs</th>
                 </tr>
             </thead>
             <tbody id="data-table-body">
@@ -72,6 +73,34 @@
     .nav a:hover {
         background-color: #ddd; /* Define a cor de fundo dos links como cinza claro ao passar o mouse */
         color: black; /* Muda a cor do texto para preto ao passar o mouse */
+    }
+
+    .filter-button {
+    background-color: #4CAF50; /* cor verde suave */
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    }
+
+    /* Cor de fundo ao passar o mouse */
+    .filter-button:hover {
+        background-color: #45a049;
+    }
+
+    /* Espaçamento do botão em relação ao .nav e à tabela */
+    .nav + .filter-button {
+        margin-top: 30px; /* Distância do nav */
+    }
+
+    #data-container {
+        margin-top: 20px; /* Distância dos botões para a tabela */
     }
 
     table {

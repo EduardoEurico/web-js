@@ -76,10 +76,10 @@ function handleFormSubmit(nome, cpf, calendario, justificativa, base64File) {
             alertDiv.innerHTML = `Olá ${nome}, seus dados foram registrados.<br><br>
                                   Nome: ${nome}<br>CPF: ${cpf}<br>Data: ${formattedDate}<br>Horário: ${horario}<br>
                                   Tipo: ${tipo}<br>Justificativa: ${justificativa}<br>Arquivo: ${base64File ? 'Enviado' : 'Nenhum'}<br>
-                                  Estado: ${locationData.state}<br>País: ${locationData.country}<br>
+                                  Estado: ${locationData.estado}<br>País: ${locationData.pais}<br>
                                   Latitude: ${latitude}<br>Longitude: ${longitude}`;
 
-            saveDataToLocalStorage(nome, cpf, formattedDate, horario, tipo, justificativa, base64File, isPastDate, latitude, longitude, locationData.state, locationData.country);
+            saveDataToLocalStorage(nome, cpf, formattedDate, horario, tipo, justificativa, base64File, latitude, longitude, locationData.estado, locationData.pais);
         }).catch(error => {
             console.error("Erro ao obter a localização: ", error);
         });
@@ -95,21 +95,21 @@ function getLocationInfo(latitude, longitude) {
         .then(data => {
             var address = data.address;
             return {
-                state: address.state || 'Indefinido',
-                country: address.country || 'Indefinido'
+                estado: address.state || 'Indefinido',
+                pais: address.country || 'Indefinido'
             };
         })
         .catch(error => {
             console.error("Erro ao acessar a API de localização: ", error);
             return {
-                state: 'Indefinido',
-                country: 'Indefinido'
+                estado: 'Indefinido',
+                pais: 'Indefinido'
             };
         });
 }
 
 // Função para salvar no localStorage
-function saveDataToLocalStorage(nome, cpf, formattedDate, horario, tipo, justificativa, base64File, isPastDate, latitude, longitude, state, country) {
+function saveDataToLocalStorage(nome, cpf, formattedDate, horario, tipo, justificativa, base64File, latitude, longitude, estado, pais) {
     let userData = JSON.parse(localStorage.getItem('userData')) || [];
 
     const newEntry = {
@@ -120,11 +120,10 @@ function saveDataToLocalStorage(nome, cpf, formattedDate, horario, tipo, justifi
         tipo,
         justificativa,
         arquivo: base64File, 
-        isPastDate,
         latitude,
         longitude,
-        estado: state,
-        pais: country
+        estado,
+        pais
     };
     userData.push(newEntry);
     localStorage.setItem('userData', JSON.stringify(userData));
@@ -183,16 +182,6 @@ function atualizarInformacoes() {
     document.getElementById('salarioParcial').innerText = `Salário parcial: R$${calcularSalarioParcial(new Date().toISOString().split('T')[0]).toFixed(2)}`;
 }
 
-// Função para adicionar observação ao registro
-function adicionarObservacao(registroId, observacao) {
-    let userData = JSON.parse(localStorage.getItem('userData')) || [];
-    let registro = userData.find((entry, index) => index === registroId);
-    if (registro) {
-        registro.observacao = observacao;
-        registro.isEdited = true; // Marca o registro como editado
-        localStorage.setItem('userData', JSON.stringify(userData));
-    }
-}
 
 // Atualizar função de submissão do formulário para incluir o saldo de horas e salário
 document.addEventListener('DOMContentLoaded', function() {
