@@ -19,7 +19,7 @@ Este projeto é um sistema de controle de ponto desenvolvido para registrar a en
 - `index.html`: Página principal para o registro de ponto.
 - `relatorio.html`: Página que exibe o relatório de registros de ponto.
 - `index.js`: Contém as principais funções de validação, manipulação de formulários, geolocalização e manipulação de dados no `localStorage`.
-- `script.js`: Script para atualizar o relógio digital exibido na interface.
+- `relogioD.js`: Script para atualizar o relógio digital exibido na interface.
 - `mostrarDados.js`: Script para exibir os dados salvos em `localStorage` na página de relatório.
 
 ## Configurações e Variáveis Principais
