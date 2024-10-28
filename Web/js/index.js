@@ -62,8 +62,6 @@ function handleFormSubmit(nome, cpf, calendario, justificativa, base64File) {
     var horario = new Date().toLocaleTimeString();
     var formattedDate = calendario.toISOString().split('T')[0];
 
-    var isPastDate = calendario < new Date(new Date().setHours(0, 0, 0, 0));
-
     navigator.geolocation.getCurrentPosition(function (position) {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
