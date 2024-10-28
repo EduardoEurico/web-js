@@ -1,6 +1,3 @@
-var dialogo = document.getElementById('meuDialogo');
-var botaoFechar = document.getElementById('botaoFechar');
-
 // Função para validar o formulário
 function validateForm() {
     var nomeInput = document.getElementById("nome");
